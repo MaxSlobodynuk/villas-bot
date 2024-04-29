@@ -1,5 +1,6 @@
 const TelegramBot = require("node-telegram-bot-api");
 const config = require("./config");
+const myChatId = require("./config");
 
 const photoPath = "./assets/images/location.jpg";
 const villasData = require("./villas");
@@ -21,10 +22,13 @@ const {
   keyboard_contacts,
 } = require("./buttons");
 
-const myChatId = "-4134143123";
 
 const bot = new TelegramBot(config.TOKEN, { polling: true });
 const usersWithoutContacts = [];
+
+const url = "https://shepit.fun/";
+bot.setWebHook(url);
+
 
 bot.on("callback_query", (query) => {
   const chatId = query.message.chat.id;
@@ -131,7 +135,7 @@ bot.on("contact", (msg) => {
   bot.sendMessage(chatId, feedbackText(firstName, lastName, phoneNumber));
 
    bot.sendMessage(
-     myChatId,
+     config.MYCHATID,
      contactsForChatText(firstName, lastName, phoneNumber)
    );
   
