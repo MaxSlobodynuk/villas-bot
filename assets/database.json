@@ -1,0 +1,24 @@
+{
+    "villas": [
+        {
+          "name": "SMART FAMILY",
+          "area": 174,
+          "landArea": 0.0869
+        },
+        {
+          "name": "YOUNG FAMILY VILLA",
+          "area": 194,
+          "landArea": 0.0821
+        },
+        {
+          "name": "VILLA MODERN",
+          "area": 174,
+          "landArea": 0.0869
+        },
+        {
+          "name": "YOUNG FAMILY VILLA",
+          "area": 174,
+          "landArea": 0.0869
+        }
+    ]
+}
