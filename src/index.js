@@ -22,13 +22,11 @@ const {
   keyboard_contacts,
 } = require("./buttons");
 
-
 const bot = new TelegramBot(config.TOKEN, { polling: true });
 const usersWithoutContacts = [];
 
 const url = "https://shepit.fun/";
 bot.setWebHook(url);
-
 
 bot.on("callback_query", (query) => {
   const chatId = query.message.chat.id;
@@ -57,56 +55,117 @@ bot.on("callback_query", (query) => {
       const smallVillas = villasData.filter(
         (villa) => villa.area >= 170 && villa.area <= 220
       );
-      smallVillas.forEach((villa) => {
-        const { name, area, url, landArea } = villa;
-        bot.sendPhoto(chatId, url, {
-          caption: villasText(name, area, landArea),
-          reply_markup: {
-            inline_keyboard: keyboard_villas,
-          },
-          parse_mode: "HTML",
-        });
-      });
+      (async function processVillas() {
+        for (const villa of smallVillas) {
+          const { name, area, landArea, url, url1, url2 } = villa;
+
+          await bot.sendPhoto(chatId, url).catch((error) => {
+            console.error("Error sending photo", error);
+          });
+
+          if (url1) {
+            await bot.sendPhoto(chatId, url1).catch((error) => {
+              console.error("Error sending photo", error);
+            });
+          }
+
+          await bot
+            .sendPhoto(chatId, url2 || url1, {
+              caption: villasText(name, area, landArea),
+              reply_markup: {
+                inline_keyboard: keyboard_villas,
+              },
+              parse_mode: "HTML",
+            })
+            .catch((error) => {
+              console.error(
+                "Error sending photo with caption and buttons",
+                error
+              );
+            });
+        }
+      })();
       break;
 
     case "medium":
       const mediumVillas = villasData.filter(
         (villa) => villa.area >= 220 && villa.area <= 320
       );
-      mediumVillas.forEach((villa) => {
-        const { name, area, url, landArea } = villa;
-        bot.sendPhoto(chatId, url, {
-          caption: villasText(name, area, landArea),
-          reply_markup: {
-            inline_keyboard: keyboard_villas,
-          },
-          parse_mode: "HTML",
-        });
-      });
+      (async function processVillas() {
+        for (const villa of mediumVillas) {
+          const { name, area, landArea, url, url1, url2 } = villa;
+
+          await bot.sendPhoto(chatId, url).catch((error) => {
+            console.error("Error sending photo", error);
+          });
+
+          // if (url1) {
+          //   await bot.sendPhoto(chatId, url1).catch((error) => {
+          //     console.error("Error sending photo", error);
+          //   });
+          // }
+
+          await bot
+            .sendPhoto(chatId, url2 || url1, {
+              caption: villasText(name, area, landArea),
+              reply_markup: {
+                inline_keyboard: keyboard_villas,
+              },
+              parse_mode: "HTML",
+            })
+            .catch((error) => {
+              console.error(
+                "Error sending photo with caption and buttons",
+                error
+              );
+            });
+        }
+      })();
       break;
 
     case "big":
       const bigVillas = villasData.filter(
         (villa) => villa.area >= 320 && villa.area <= 500
       );
-      bigVillas.forEach((villa) => {
-        const { name, area, url, landArea } = villa;
-        bot.sendPhoto(chatId, url, {
-          caption: villasText(name, area, landArea),
-          reply_markup: {
-            inline_keyboard: keyboard_villas,
-          },
-          parse_mode: "HTML",
-        });
-      });
+      (async function processVillas() {
+        for (const villa of bigVillas) {
+          const { name, area, landArea, url, url1, url2 } = villa;
+
+          await bot.sendPhoto(chatId, url).catch((error) => {
+            console.error("Error sending photo", error);
+          });
+
+          if (url1) {
+            await bot.sendPhoto(chatId, url1).catch((error) => {
+              console.error("Error sending photo", error);
+            });
+          }
+
+          await bot
+            .sendPhoto(chatId, url2 || url1, {
+              caption: villasText(name, area, landArea),
+              reply_markup: {
+                inline_keyboard: keyboard_villas,
+              },
+              parse_mode: "HTML",
+            })
+            .catch((error) => {
+              console.error(
+                "Error sending photo with caption and buttons",
+                error
+              );
+            });
+        }
+      })();
       break;
 
     case "villas":
       bot.sendMessage(chatId, thankText(), {
         reply_markup: {
           keyboard: keyboard_contacts,
-          one_time_keyboard: true,
+          request_contact: true,
           resize_keyboard: true,
+          one_time_keyboard: true,
         },
         parse_mode: "HTML",
       });
@@ -134,15 +193,15 @@ bot.on("contact", (msg) => {
 
   bot.sendMessage(chatId, feedbackText(firstName, lastName, phoneNumber));
 
-   bot.sendMessage(
-     config.MYCHATID,
-     contactsForChatText(firstName, lastName, phoneNumber)
-   );
-  
-    const index = usersWithoutContacts.indexOf(chatId);
-    if (index !== -1) {
-      usersWithoutContacts.splice(index, 1); // Видалити chatId з масиву
-    }
+  bot.sendMessage(
+    config.MYCHATID,
+    contactsForChatText(firstName, lastName, phoneNumber)
+  );
+
+  const index = usersWithoutContacts.indexOf(chatId);
+  if (index !== -1) {
+    usersWithoutContacts.splice(index, 1); // Видалити chatId з масиву
+  }
 });
 
 setInterval(() => {
@@ -151,6 +210,7 @@ setInterval(() => {
       bot.sendMessage(chatId, repeatText(), {
         reply_markup: {
           keyboard: keyboard_contacts,
+          request_contact: true,
           resize_keyboard: true,
           one_time_keyboard: true,
         },
@@ -158,4 +218,4 @@ setInterval(() => {
       });
     });
   }
-}, 3 * 60 * 60 * 1000);
+}, 5 * 60 * 60 * 1000);
