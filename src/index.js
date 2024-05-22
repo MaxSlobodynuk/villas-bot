@@ -1,6 +1,5 @@
 const TelegramBot = require("node-telegram-bot-api");
 const config = require("./config");
-const myChatId = require("./config");
 
 const photoPath = "./assets/images/location.jpg";
 const villasData = require("./villas");
@@ -204,7 +203,7 @@ bot.on("contact", (msg) => {
   }
 });
 
-setInterval(() => {
+setTimeout(() => {
   if (usersWithoutContacts.length > 0) {
     usersWithoutContacts.forEach((chatId) => {
       bot.sendMessage(chatId, repeatText(), {
@@ -218,4 +217,20 @@ setInterval(() => {
       });
     });
   }
-}, 5 * 60 * 60 * 1000);
+}, 2 * 60 * 1000);
+
+// setInterval(() => {
+//   if (usersWithoutContacts.length > 0) {
+//     usersWithoutContacts.forEach((chatId) => {
+//       bot.sendMessage(chatId, repeatText(), {
+//         reply_markup: {
+//           keyboard: keyboard_contacts,
+//           request_contact: true,
+//           resize_keyboard: true,
+//           one_time_keyboard: true,
+//         },
+//         parse_mode: "HTML",
+//       });
+//     });
+//   }
+// }, 5 * 60 * 60 * 1000);
